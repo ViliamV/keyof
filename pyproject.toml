@@ -1,0 +1,102 @@
+[tool.poetry]
+name = "keyof"
+version = "0.1.0"
+description = ""
+authors = ["Viliam Valent <keyof@valent.email>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/ViliamV/keyof"
+homepage = "https://github.com/ViliamV/keyof"
+packages = [{include = "keyof"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.4.1"
+ruff = "^0.0.279"
+black = "^23.7.0"
+poethepoet = "^0.21.1"
+pyright = "^1.1.318"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.11"
+plugins = ["keyof.mypy_plugin"]
+follow_imports = "silent"
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_reexport = true
+ignore_missing_imports = true
+show_error_codes = true
+cache_dir = ".cache/mypy/"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+
+[tool.ruff]
+select = [
+  "A",   # flake8-builtins
+  "ARG", # flake8-unused-arguments
+  "B",   # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "C90", # mccabe
+  "E",   # pycodestyle
+  "F",   # Pyflakes
+  "N",   # pep8-naming
+  "NPY", # NumPy
+  "PD",  # pandas-vet
+  "PIE", # flake8-pie
+  "PLE", # Pylint Error
+  "PTH", # flake8-use-pathlib
+  "RUF", # Ruff
+  "S",   # flake8-bandit
+  "SIM", # flakes8-simplify
+  "T20", # flake8-print
+  "UP",  # pyupgrade
+  "I001", # isort
+]
+cache-dir = ".cache/ruff"
+line-length = 120
+target-version = "py311"
+# Never enforce line length violations
+ignore = ["E501"]
+format = "grouped"
+extend-exclude = [".cache"]
+
+[tool.poe.tasks]
+
+[tool.poe.tasks.clean]
+help = "Remove generated files"
+cmd = """
+    rm -rf .coverage
+           .cache
+           .pytest_cache
+           ./**/__pycache__
+           dist
+           htmlcov
+  """
+
+[tool.poe.tasks.format]
+help = "Run formating tools on the code base"
+sequence = ["black .", "ruff --fix ."]
+default_item_type = "cmd"
+
+[tool.poe.tasks.type]
+help = "Run the mypy type checker"
+cmd = "mypy ."
+
+[tool.poe.tasks.lint]
+help = "Run ruff linter on package"
+cmd = "ruff ."

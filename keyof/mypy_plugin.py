@@ -1,18 +1,22 @@
-from collections.abc import Callable, Sequence
-from typing import Final
+from collections.abc import Callable
+from typing import Final, cast
 
 from mypy.errorcodes import TYPE_ARG
+from mypy.nodes import TypeInfo
 from mypy.plugin import AnalyzeTypeContext, Plugin, TypeAnalyzerPluginInterface
+from mypy.typeanal import TypeAnalyser
 from mypy.types import (
+    AnyType,
     LiteralType,
     Type,
     TypeAliasType,
     TypedDictType,
-    UninhabitedType,
+    TypeOfAny,
+    UnboundType,
     UnionType,
 )
 
-_MIN_MYPY_VERSION = (1, 0, 0)
+_MIN_MYPY_VERSION = (1, 0, 1)
 _TYPE_NAME: Final = "KeyOf"
 _TYPES_TO_ANALYZE: Final = frozenset(["keyof.KeyOf", "keyof.compat.KeyOf"])
 
@@ -21,31 +25,36 @@ def _create_string_literal(value: str, api: TypeAnalyzerPluginInterface) -> Lite
     return LiteralType(value, api.named_type("builtins.str", []))
 
 
-def _create_literal_type(values: Sequence[str], api: TypeAnalyzerPluginInterface) -> UnionType | LiteralType:
-    if len(values) == 1:
-        return _create_string_literal(values[0], api)
-    return UnionType([_create_string_literal(value, api) for value in values])
+def _default_type_analysis(api: TypeAnalyser, type_: UnboundType) -> Type:
+    symbol_table_node = api.lookup_qualified(type_.name, type_)
+    if symbol_table_node is None:
+        return AnyType(TypeOfAny.special_form)
+    node = symbol_table_node.node
+    if isinstance(node, TypeInfo):
+        return api.analyze_type_with_type_info(node, type_.args, type_)
+    return AnyType(TypeOfAny.special_form)
 
 
 def _analyze_typed_dict_key(ctx: AnalyzeTypeContext) -> Type:
+    api = cast(TypeAnalyser, ctx.api)
     if (args_len := len(ctx.type.args)) != 1:
-        ctx.api.fail(
+        api.fail(
             f'"{_TYPE_NAME}" expects 1 type argument, but {args_len} given',
             ctx.context,
             code=TYPE_ARG,
         )
-        return UninhabitedType()
+        return _default_type_analysis(api, ctx.type)
     argument = ctx.type.args[0]
     analyzed: Type | None = ctx.api.analyze_type(argument)
     if isinstance(analyzed, TypeAliasType):
         analyzed = analyzed.expand_all_if_possible()
     if not isinstance(analyzed, TypedDictType):
-        ctx.api.fail(
+        api.fail(
             f'Argument 1 to "{_TYPE_NAME}" has incompatible type "{analyzed}"; expected "TypedDict"',
             ctx.context,
         )
-        return UninhabitedType()
-    return _create_literal_type(list(analyzed.items.keys()), ctx.api)
+        return _default_type_analysis(api, ctx.type)
+    return UnionType.make_union([_create_string_literal(value, api) for value in analyzed.items])
 
 
 class CustomPlugin(Plugin):

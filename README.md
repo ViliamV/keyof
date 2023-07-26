@@ -3,6 +3,11 @@
 [Mypy](https://mypy-lang.org/) plugin for static type checking of [TypedDict](https://peps.python.org/pep-0589/) keys
 inspired by TypeScript's [`keyof` type operator](https://www.typescriptlang.org/docs/handbook/2/keyof-types.html).
 
+## Requirements
+
+- `python>=3.11`
+- `mypy>=1.0.1`
+
 ## Installation
 
 ```shell

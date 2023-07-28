@@ -24,6 +24,15 @@ Add `keyof.mypy_plugin` to the list of plugins in your [mypy config file](https:
 plugins = ["keyof.mypy_plugin"]
 ```
 
+## Features
+
+✅ `KeyOf`, `RequiredKeyOf`, and `NotRequiredKeyOf` types
+✅ Supports inheritance
+✅ Plays nicely with other types, e.g. `KeyOf[Foo] | Literal["bar"]`
+✅ compatibility module for `Pylance` and `Pyright`
+
+❌ Generic `TypeVar` arguments
+
 ## Usage
 
 ```python
@@ -45,6 +54,12 @@ data = Data(version=1, command="foo")
 
 get_data(data, "version")  # OK
 
-get_data(data, "not_existing_key") # error
-# Argument 2 to "get_data" has incompatible type "Literal['not_existing_key']"; expected "Literal['version', 'command']"
+get_data(data, "foo")
+# mypy catches the error:
+# error: Argument 2 to "get_data" has incompatible type "Literal['foo']"; expected "Literal['version', 'command']"
 ```
+
+### Usage with other type checkers
+
+Since [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) and [Pyright](https://microsoft.github.io/pyright/#/) don't support plugins
+and cannot correctly handle subclassing of `Any` (new in Python 3.11) there is compatibility module `keyof.compat` that exports the same types but they are only `TypeAlias` for `Any`.

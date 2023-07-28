@@ -26,13 +26,13 @@ plugins = ["keyof.mypy_plugin"]
 
 ## Features
 
-✅ `KeyOf`, `RequiredKeyOf`, and `NotRequiredKeyOf` types
-✅ Supports inheritance
-✅ Plays nicely with other types, e.g. `KeyOf[Foo] | Literal["bar"]`
-✅ Compatibility module for `Pylance` and `Pyright`
-✅ Zero dependencies
+- ✅ `KeyOf`, `RequiredKeyOf`, and `NotRequiredKeyOf` types
+- ✅ Supports inheritance
+- ✅ Plays nicely with other types, e.g. `KeyOf[Foo] | Literal["bar"]`
+- ✅ Compatibility module for `Pylance` and `Pyright`
+- ✅ Zero dependencies
 
-❌ Generic `TypeVar` arguments
+- ❌ Generic `TypeVar` arguments
 
 ## Usage
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "keyof"
-version = "0.3.3"
+version = "0.3.2"
 description = ""
 authors = ["Viliam Valent <keyof@valent.email>"]
 license = "MIT"
@@ -18,6 +18,8 @@ ruff = "^0.0.279"
 black = "^23.7.0"
 poethepoet = "^0.21.1"
 pyright = "^1.1.318"
+pytest = "^7.1"
+pytest-mypy-testing = "*"
 
 [build-system]
 requires = ["poetry-core"]
@@ -74,7 +76,6 @@ target-version = "py311"
 ignore = ["E501"]
 format = "grouped"
 extend-exclude = [".cache"]
-ignore-init-module-imports = true
 
 [tool.poe.tasks]
 

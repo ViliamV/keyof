@@ -1,5 +1,8 @@
-from typing import Any, TypeAlias
+from typing import TYPE_CHECKING, Any, TypeAlias
 
-KeyOf: TypeAlias = Any
-RequiredKeyOf: TypeAlias = Any
-NotRequiredKeyOf: TypeAlias = Any
+if TYPE_CHECKING:
+    KeyOf: TypeAlias = Any
+    RequiredKeyOf: TypeAlias = Any
+    NotRequiredKeyOf: TypeAlias = Any
+else:
+    from keyof import KeyOf, NotRequiredKeyOf, RequiredKeyOf  # noqa: F401

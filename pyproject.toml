@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "keyof"
-version = "0.3.2"
+version = "0.3.3"
 description = ""
 authors = ["Viliam Valent <keyof@valent.email>"]
 license = "MIT"
@@ -74,6 +74,7 @@ target-version = "py311"
 ignore = ["E501"]
 format = "grouped"
 extend-exclude = [".cache"]
+ignore-init-module-imports = true
 
 [tool.poe.tasks]
 

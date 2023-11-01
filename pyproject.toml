@@ -14,8 +14,7 @@ python = "^3.11"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.4.1"
-ruff = "^0.0.279"
-black = "^23.7.0"
+ruff = ">=0.1.3"
 poethepoet = "^0.21.1"
 pyright = "^1.1.318"
 
@@ -72,7 +71,7 @@ line-length = 120
 target-version = "py311"
 # Never enforce line length violations
 ignore = ["E501"]
-format = "grouped"
+output-format = "grouped"
 extend-exclude = [".cache"]
 ignore-init-module-imports = true
 
@@ -91,7 +90,7 @@ cmd = """
 
 [tool.poe.tasks.format]
 help = "Run formating tools on the code base"
-sequence = ["black .", "ruff --fix ."]
+sequence = ["ruff --fix-only .", "ruff format ."]
 default_item_type = "cmd"
 
 [tool.poe.tasks.type]

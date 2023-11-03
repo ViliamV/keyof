@@ -64,11 +64,11 @@ def _analyze_typed_dict_key(ctx: AnalyzeTypeContext) -> Type:
         )
         return _default_type_analysis(api, ctx.type)
     match type_name:
-        case "KeyOf":
+        case "KeyOf" | "keyof.KeyOf" | "keyof.compat.KeyOf":
             keys = set(analyzed.items.keys())
-        case "RequiredKeyOf":
+        case "RequiredKeyOf" | "keyof.RequiredKeyOf" | "keyof.compat.RequiredKeyOf":
             keys = analyzed.required_keys
-        case "NotRequiredKeyOf":
+        case "NotRequiredKeyOf" | "keyof.NotRequiredKeyOf" | "keyof.compat.NotRequiredKeyOf":
             keys = set(analyzed.items.keys()) - analyzed.required_keys
         case _:
             raise RuntimeError(f"Unexpected type name: {type_name!r}")

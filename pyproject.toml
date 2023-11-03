@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "keyof"
-version = "0.3.3"
+version = "0.4.0"
 description = ""
 authors = ["Viliam Valent <keyof@valent.email>"]
 license = "MIT"

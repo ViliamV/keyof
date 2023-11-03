@@ -109,6 +109,10 @@ help = "Run formating tools on the code base"
 sequence = ["ruff --fix-only .", "ruff format ."]
 default_item_type = "cmd"
 
+[tool.poe.tasks.style]
+help = "Check formating on the code base"
+cmd = "ruff format --check ."
+
 [tool.poe.tasks.type]
 help = "Run the mypy type checker"
 cmd = "mypy keyof"

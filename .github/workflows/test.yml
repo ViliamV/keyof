@@ -1,5 +1,6 @@
-name: Tests
+name: Check style, linting, typing, and tests
 on:
+  workflow_dispatch:
   push:
     branches: ["**"]
     paths-ignore:
@@ -13,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.11, 3.12]
-        poetry-version: [1.6.1]
+        python-version: ["3.11", "3.12"]
+        poetry-version: ["1.6.1"]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -58,5 +59,11 @@ jobs:
       # at some point that they'll be installed and working.
       - name: Poetry install (finalization)
         run: poetry install --no-interaction
+      - name: Check style
+        run: poetry run poe style
+      - name: Check lint
+        run: poetry run poe lint
+      - name: Check typing
+        run: poetry run poe type
       - name: Run tests
         run: poetry run poe test
